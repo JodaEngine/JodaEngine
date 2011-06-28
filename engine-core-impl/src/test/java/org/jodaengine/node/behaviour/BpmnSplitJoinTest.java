@@ -3,10 +3,14 @@ package org.jodaengine.node.behaviour;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
 
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Observable;
 
 import org.jodaengine.deployment.ProcessDefinitionImporter;
 import org.jodaengine.deployment.importer.definition.BpmnXmlImporter;
@@ -63,7 +67,7 @@ public class BpmnSplitJoinTest {
         AbstractProcessInstance instance = new ProcessInstance(
             null,
             new BpmnTokenBuilder(mockNavigator, mockExtension));
-        BpmnToken token = new BpmnToken(startNode, null, instance, mockNavigator, mockExtension);
+        Token token = new BpmnToken(startNode, null, instance, mockNavigator, mockExtension);
         
         token.executeStep();
         token.executeStep();
@@ -72,15 +76,57 @@ public class BpmnSplitJoinTest {
         mockNavigator.flushWorkQueue();
         token.executeStep();
         
+        // the AND-Split has been executed
         List<Token> splittedTokens = mockNavigator.getWorkQueue();
         Assert.assertEquals(splittedTokens.size(), 2);
         
-//        
-//        ArgumentCaptor<ActivityLifecycleChangeEvent> eventCaptor
-//            = ArgumentCaptor.forClass(ActivityLifecycleChangeEvent.class);
-//        
-//        verify(mockListener).stateChanged(eventCaptor.capture());
-//        
-//        eventCaptor.ge
+        Token splitToken1 = splittedTokens.get(0);
+        Token splitToken2 = splittedTokens.get(1);
+                
+        splitToken1.executeStep();
+        splitToken2.executeStep();
+        
+        // empty the queue before the and-join is executed.
+        mockNavigator.flushWorkQueue();
+        
+        splitToken1.executeStep();
+        splitToken2.executeStep();
+        
+        // one token should be on the xor join now
+        List<Token> joinedTokens = mockNavigator.getWorkQueue();
+        Assert.assertEquals(joinedTokens.size(), 1);
+        
+        token = joinedTokens.get(0);
+        
+        Node nextNode = token.getCurrentNode().getOutgoingControlFlows().get(0).getDestination();
+        
+        ArgumentCaptor<ActivityLifecycleChangeEvent> eventCaptor
+        = ArgumentCaptor.forClass(ActivityLifecycleChangeEvent.class);       
+        
+        // 32 times, because the and-join has been executed twice (state changes included).
+        verify(mockListener, times(32)).update(any(Observable.class), eventCaptor.capture());
+        Assert.assertEquals(eventCaptor.getAllValues().size(), 32);
+        
+        
+
+        reset(mockListener);
+        mockNavigator.flushWorkQueue();
+        token.executeStep();        
+        
+        eventCaptor = ArgumentCaptor.forClass(ActivityLifecycleChangeEvent.class);       
+        verify(mockListener, times(4)).update(any(Observable.class), eventCaptor.capture());
+        Assert.assertEquals(eventCaptor.getAllValues().size(), 4);
+                
+        joinedTokens = mockNavigator.getWorkQueue();
+        Assert.assertEquals(joinedTokens.size(), 1);
+        Assert.assertEquals(token.getCurrentNode(), nextNode, "Token should be now on node D");
+        
+        reset(mockListener);
+        token.executeStep();
+        token.executeStep();        
+        
+        eventCaptor = ArgumentCaptor.forClass(ActivityLifecycleChangeEvent.class);       
+        verify(mockListener, times(7)).update(any(Observable.class), eventCaptor.capture());
+        Assert.assertEquals(eventCaptor.getAllValues().size(), 7);
     }
 }
