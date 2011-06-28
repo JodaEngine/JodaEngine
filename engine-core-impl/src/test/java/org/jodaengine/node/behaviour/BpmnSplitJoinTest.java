@@ -2,6 +2,7 @@ package org.jodaengine.node.behaviour;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 
 import java.io.InputStream;
 import java.util.Arrays;
@@ -11,6 +12,7 @@ import org.jodaengine.deployment.ProcessDefinitionImporter;
 import org.jodaengine.deployment.importer.definition.BpmnXmlImporter;
 import org.jodaengine.exception.JodaEngineException;
 import org.jodaengine.ext.listener.AbstractTokenListener;
+import org.jodaengine.ext.listener.token.ActivityLifecycleChangeEvent;
 import org.jodaengine.ext.service.ExtensionService;
 import org.jodaengine.navigator.NavigatorImplMock;
 import org.jodaengine.process.definition.ProcessDefinition;
@@ -21,7 +23,7 @@ import org.jodaengine.process.token.BpmnToken;
 import org.jodaengine.process.token.Token;
 import org.jodaengine.process.token.builder.BpmnTokenBuilder;
 import org.jodaengine.util.ReflectionUtil;
-import org.mockito.Mockito;
+import org.mockito.ArgumentCaptor;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -73,6 +75,12 @@ public class BpmnSplitJoinTest {
         List<Token> splittedTokens = mockNavigator.getWorkQueue();
         Assert.assertEquals(splittedTokens.size(), 2);
         
-        
+//        
+//        ArgumentCaptor<ActivityLifecycleChangeEvent> eventCaptor
+//            = ArgumentCaptor.forClass(ActivityLifecycleChangeEvent.class);
+//        
+//        verify(mockListener).stateChanged(eventCaptor.capture());
+//        
+//        eventCaptor.ge
     }
 }
