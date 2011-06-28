@@ -262,7 +262,6 @@ implements Token, ServiceContext {
      */
     public Token createToken(Node startNode) {
         AbstractToken token = (AbstractToken) instance.createToken(startNode, this);
-        token.registerListeners(getListeners());
         return token;
     }
 

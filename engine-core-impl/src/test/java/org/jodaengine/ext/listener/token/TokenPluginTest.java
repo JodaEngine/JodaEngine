@@ -68,19 +68,19 @@ public class TokenPluginTest {
         verify(mock, never()).update(eq(this.token), this.eventCapturer.capture());
     }
 
-    /**
-     * Tests that new tokens that are created by this token receive the same plugins the creator has.
-     * 
-     * @throws JodaEngineException the JodaEngine exception
-     */
-    @Test
-    public void testPluginRegistrationInheritance()
-    throws JodaEngineException {
-
-        AbstractToken newToken = (AbstractToken) token.createToken(node1);
-        newToken.executeStep();
-        verify(mock, times(3)).update(eq(newToken), this.eventCapturer.capture());
-    }
+//    /**
+//     * Tests that new tokens that are created by this token receive the same plugins the creator has.
+//     * 
+//     * @throws JodaEngineException the JodaEngine exception
+//     */
+//    @Test
+//    public void testPluginRegistrationInheritance()
+//    throws JodaEngineException {
+//
+//        AbstractToken newToken = (AbstractToken) token.createToken(node1);
+//        newToken.executeStep();
+//        verify(mock, times(3)).update(eq(newToken), this.eventCapturer.capture());
+//    }
 
     /**
      * Tests that newly created tokens do not receive plugins that were deregistered before.
