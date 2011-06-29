@@ -1,6 +1,8 @@
 package org.jodaengine.eventmanagement.processevent.incoming.condition.simple;
 
 import org.jodaengine.eventmanagement.adapter.mail.MailAdapterEvent;
+import org.jodaengine.eventmanagement.processevent.incoming.condition.complex.AbstractMultipleEventCondition;
+import org.jodaengine.eventmanagement.processevent.incoming.condition.complex.OrEventCondition;
 import org.jodaengine.eventmanagement.subscription.condition.EventCondition;
 import org.mockito.Mockito;
 import org.testng.Assert;
@@ -24,6 +26,7 @@ public class MethodReturnsStringContainingEventConditionTest {
     public void setUp() {
         event = Mockito.mock(MailAdapterEvent.class);
         Mockito.when(event.getMessageSubject()).thenReturn("Re: " + ID);
+        Mockito.when(event.getMessageContent()).thenReturn("LoremIpsum blablablabla LoremIpsum");
     }
     
     /**
@@ -48,5 +51,24 @@ public class MethodReturnsStringContainingEventConditionTest {
             "getMessageSubject", 
             "somethingeElse");
         Assert.assertFalse(condition.evaluate(event));
+    }
+    
+    /**
+     * Uses an orCondition to check both the message content and subject.
+     * Subject contains the ID so it should be true.
+     */
+    @Test
+    public void testWithOrConditionSubjectTrue() {
+        EventCondition condition1 = new MethodReturnsStringContainingEventCondition(
+            MailAdapterEvent.class, 
+            "getMessageSubject", 
+            ID);
+        EventCondition condition2 = new MethodReturnsStringContainingEventCondition(
+            MailAdapterEvent.class, 
+            "getMessageContent", 
+            ID);
+        AbstractMultipleEventCondition orCondition = new OrEventCondition();
+        orCondition.addEventCondition(condition1).addEventCondition(condition2);
+        Assert.assertTrue(orCondition.evaluate(event));
     }
 }
