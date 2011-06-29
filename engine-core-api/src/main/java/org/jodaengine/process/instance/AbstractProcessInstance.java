@@ -3,6 +3,9 @@ package org.jodaengine.process.instance;
 import java.util.List;
 import java.util.UUID;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonManagedReference;
 import org.codehaus.jackson.annotate.JsonProperty;
@@ -10,6 +13,7 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.codehaus.jackson.annotate.JsonTypeInfo.As;
 import org.codehaus.jackson.annotate.JsonTypeInfo.Id;
 import org.jodaengine.process.definition.ProcessDefinition;
+import org.jodaengine.process.structure.ControlFlow;
 import org.jodaengine.process.structure.Node;
 import org.jodaengine.process.token.Token;
 import org.jodaengine.process.token.TokenBuilder;
@@ -98,10 +102,13 @@ public abstract class AbstractProcessInstance implements Identifiable<UUID> {
      * Creates a new token pointing to the given node n in the same process instance context.
      *
      * @param startNode the start node
+     * @param lastTakenControlFlow the last taken control flow
      * @param parentToken the parent token
      * @return the new process token
      */
-    public abstract Token createToken(Node startNode, Token parentToken);
+    public abstract Token createToken(@Nonnull Node startNode,
+                                      @Nullable ControlFlow lastTakenControlFlow,
+                                      @Nullable Token parentToken);
     
     /**
      * Gets the builder.

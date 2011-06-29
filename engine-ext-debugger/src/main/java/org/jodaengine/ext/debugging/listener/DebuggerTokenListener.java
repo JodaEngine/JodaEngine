@@ -59,12 +59,31 @@ public class DebuggerTokenListener extends AbstractTokenListener {
         DebuggerInstanceAttribute attribute = DebuggerInstanceAttribute.getAttribute(token);
         
         //
-        // keep chosen path for history purposes
+        // INIT state will be used for path history
+        //   and
+        // cannot be used for interruption
         //
         if (ActivityState.INIT.equals(token.getCurrentActivityState())) {
+            //
+            // keep chosen path for history purposes
+            // -> any activity/gateway/event will reach INIT state
+            // 
+            // -> start activities may not have a previous path
+            //      or
+            // -> the language does not support this feature (bad style!)
+            //
             if (token.getLastTakenControlFlow() != null) {
                 attribute.addPreviousPath(token.getLastTakenControlFlow(), token);
             }
+            
+            //
+            // ignore INIT state for interruption
+            // -> after an and-split the first token will reach init state
+            //    (and be interrupted when STEPing_OVER)
+            //    therefore the second path is not yet created
+            // -> no parallel evaluation possible
+            //
+            return;
         }
         
         //

@@ -37,7 +37,7 @@ $().ready(function() {
         });
         
         if ($(document).overlay) {
-            $('img.svg-artifact[rel]', tableBody).overlay();
+            $('img.svg-artifact[rel]', tableBody).overlay({speed: 0});
         }
         
         $('.artifact-cell a.set-svg-artifact', tableBody).click(function(event) {

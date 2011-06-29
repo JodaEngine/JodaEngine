@@ -19,6 +19,7 @@ import org.jodaengine.ext.handler.AbstractExceptionHandler;
 import org.jodaengine.ext.listener.AbstractTokenListener;
 import org.jodaengine.ext.listener.JoinListener;
 import org.jodaengine.ext.listener.SplitListener;
+import org.jodaengine.ext.listener.TokenCreationListener;
 import org.jodaengine.ext.service.ExtensionService;
 import org.jodaengine.navigator.Navigator;
 import org.jodaengine.navigator.NavigatorInside;
@@ -68,6 +69,8 @@ implements Token, ServiceContext {
     protected Collection<SplitListener> splitListener;
     @JsonIgnore
     protected Collection<JoinListener> joinListener;
+    @JsonIgnore
+    protected Collection<TokenCreationListener> creationListener;
     
     protected Token parentToken;
 
@@ -109,11 +112,20 @@ implements Token, ServiceContext {
         
         this.splitListener = new LinkedList<SplitListener>();
         this.joinListener = new LinkedList<JoinListener>();
+        this.creationListener = new LinkedList<TokenCreationListener>();
         
         //
         // load available extensions, if an ExtensionService is provided
         //
         loadExtensions(extensionService);
+        
+        //
+        // the token is nearly finished, but has not yet been INITialized
+        // -> trigger creation listener
+        //
+        for (TokenCreationListener listener: this.creationListener) {
+            listener.tokenCreatedPreInit(this, parentToken);
+        }
     }
 
     /**
@@ -218,6 +230,17 @@ implements Token, ServiceContext {
         
         this.joinListener.addAll(listener);
     }
+    
+    /**
+     * Registers any number of {@link TokenCreationListener}s.
+     * 
+     * @param listener
+     *            the listeners to be added
+     */
+    public void registerCreationListener(@Nonnull Collection<TokenCreationListener> listener) {
+        
+        this.creationListener.addAll(listener);
+    }
 
     /**
      * Registers any available extension suitable for {@link TokenImpl}.
@@ -244,6 +267,8 @@ implements Token, ServiceContext {
         Collection<AbstractTokenListener> tokenListener = extensionService.getExtensions(AbstractTokenListener.class);
         Collection<SplitListener> tokenSplitListener = extensionService.getExtensions(SplitListener.class);
         Collection<JoinListener> tokenJoinListener = extensionService.getExtensions(JoinListener.class);
+        Collection<TokenCreationListener> tokenCreationListener
+            = extensionService.getExtensions(TokenCreationListener.class);
         
         //
         // register all of them
@@ -252,16 +277,19 @@ implements Token, ServiceContext {
         registerExceptionHandlers(tokenExHandler);
         registerSplitListener(tokenSplitListener);
         registerJoinListener(tokenJoinListener);
+        registerCreationListener(tokenCreationListener);
     }
 
     /**
      * Creates a new token and registers this for the listeners.
      *
      * @param startNode the start node
+     * @param lastTakenControlFlow the last taken control flow
      * @return the token
      */
-    public Token createToken(Node startNode) {
-        AbstractToken token = (AbstractToken) instance.createToken(startNode, this);
+    public Token createToken(@Nonnull Node startNode,
+                             @Nonnull ControlFlow lastTakenControlFlow) {
+        AbstractToken token = (AbstractToken) instance.createToken(startNode, lastTakenControlFlow, this);
         return token;
     }
 

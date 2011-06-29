@@ -3,7 +3,6 @@ package org.jodaengine.ext.listener.token;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import org.jodaengine.exception.JodaEngineException;
@@ -47,7 +46,7 @@ public class TokenPluginTest {
             new TakeAllSplitBehaviour());
         builder = new BpmnTokenBuilder(mock(Navigator.class), null);
         AbstractProcessInstance processInstance = new ProcessInstance(null, builder);
-        this.token = new BpmnToken(node1, null, processInstance, null, null);
+        this.token = new BpmnToken(node1, processInstance, null, null);
 
         mock = mock(AbstractTokenListener.class);
         token.registerListener(mock);
@@ -90,9 +89,9 @@ public class TokenPluginTest {
     @Test
     public void testPluginDeregistrationInheritance()
     throws JodaEngineException {
-
+        
         token.deregisterListener(mock);
-        AbstractToken newToken = (AbstractToken) token.createToken(token.getCurrentNode());
+        AbstractToken newToken = (AbstractToken) token.createToken(token.getCurrentNode(), null);
         newToken.executeStep();
         verify(mock, never()).update(eq(newToken), this.eventCapturer.capture());
     }

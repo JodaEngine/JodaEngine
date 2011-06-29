@@ -43,7 +43,6 @@ public class TokenListenerTest {
                 new AutomatedDummyActivity(dummyString),
                 new SimpleJoinBehaviour(),
                 new TakeAllSplitBehaviour()),
-                null,
             new ProcessInstance(null, mock(BpmnTokenBuilder.class)),
             null,
             null);
@@ -59,11 +58,11 @@ public class TokenListenerTest {
     @Test
     public void testStartedTrigger()
     throws JodaEngineException {
-
+        
         AbstractTokenListener mock = mock(AbstractTokenListener.class);
         this.token.registerListener(mock);
         token.executeStep();
-
+        
         verify(mock, times(3)).update(eq(this.token), this.eventCapturer.capture());
         Assert.assertEquals(ActivityState.COMPLETED, this.eventCapturer.getValue().getNewState());
     }

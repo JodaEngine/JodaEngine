@@ -78,7 +78,6 @@ public class XORSplitBehaviour implements OutgoingBehaviour {
             }
             
             if (controlFlowList.isEmpty()) {
-
                 throw new NoValidPathException();
             }
             

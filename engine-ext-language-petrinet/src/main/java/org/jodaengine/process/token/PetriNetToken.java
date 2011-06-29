@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.jodaengine.exception.JodaEngineException;
@@ -38,25 +39,28 @@ public class PetriNetToken extends AbstractToken {
      */
     public PetriNetToken(Node startNode, AbstractProcessInstance instance, Navigator navigator) {
 
-        this(startNode, null, instance, navigator, null);
+        this(startNode, null, null, instance, navigator, null);
     }
     
     /**
      * Instantiates a new process {@link TokenImpl} and register all available extensions.
      *
      * @param startNode the start node
-     * @param parentToken the parent token
+     * @param lastTakenControlFlow the last taken control flow, if it is a child token
+     * @param parentToken the parent token, if it is a child token
      * @param instance the instance
      * @param navigator the navigator
      * @param extensionService the extension service
      */
-    public PetriNetToken(Node startNode,
-                      Token parentToken,
-                      AbstractProcessInstance instance,
-                      Navigator navigator,
-                      @Nullable ExtensionService extensionService) {
-
+    public PetriNetToken(@Nonnull Node startNode,
+                         @Nullable ControlFlow lastTakenControlFlow,
+                         @Nullable Token parentToken,
+                         @Nonnull AbstractProcessInstance instance,
+                         @Nonnull Navigator navigator,
+                         @Nullable ExtensionService extensionService) {
+        
         super(startNode, parentToken, instance, navigator, extensionService);
+        this.lastTakenControlFlow = lastTakenControlFlow;
     }
 
     @Override
@@ -121,7 +125,7 @@ public class PetriNetToken extends AbstractToken {
                 Token newToken;
                 // Only create a new token, if a PetriTransition was before 
                 if (controlFlow.getSource().getOutgoingBehaviour() instanceof TransitionSplitBehaviour) {
-                    newToken = createToken(node);
+                    newToken = createToken(node, controlFlow);
                 } else {
                     newToken = this;
                 }

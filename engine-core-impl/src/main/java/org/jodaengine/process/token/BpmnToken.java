@@ -11,6 +11,7 @@ import org.jodaengine.exception.JodaEngineRuntimeException;
 import org.jodaengine.exception.NoValidPathException;
 import org.jodaengine.ext.listener.JoinListener;
 import org.jodaengine.ext.listener.SplitListener;
+import org.jodaengine.ext.listener.TokenCreationListener;
 import org.jodaengine.ext.listener.token.ActivityLifecycleChangeEvent;
 import org.jodaengine.ext.service.ExtensionService;
 import org.jodaengine.navigator.Navigator;
@@ -49,10 +50,10 @@ public class BpmnToken extends AbstractToken {
      */
     @Deprecated
     public BpmnToken(@Nonnull Node startNode,
-                     AbstractProcessInstance instance,
-                     Navigator navigator) {
-
-        this(startNode, null, instance, navigator, null);
+                     @Nonnull AbstractProcessInstance instance,
+                     @Nonnull Navigator navigator) {
+        
+        this(startNode, null, null, instance, navigator, null);
     }
 
     /**
@@ -60,6 +61,28 @@ public class BpmnToken extends AbstractToken {
      * 
      * @param startNode
      *            the start node
+     * @param instance
+     *            the instance
+     * @param navigator
+     *            the navigator
+     * @param extensionService
+     *            the extension service
+     */
+    public BpmnToken(@Nonnull Node startNode,
+                     @Nonnull AbstractProcessInstance instance,
+                     @Nonnull Navigator navigator,
+                     @Nullable ExtensionService extensionService) {
+        
+        this(startNode, null, null, instance, navigator, extensionService);
+    }
+    /**
+     * Instantiates a new process {@link TokenImpl} and registers all available extensions.
+     * This constructor is used for child tokens.
+     * 
+     * @param startNode
+     *            the start node
+     * @param lastTakenControlFlow
+     *            the last taken control flow, e.g. after a split
      * @param parentToken
      *            the parent token
      * @param instance
@@ -70,12 +93,14 @@ public class BpmnToken extends AbstractToken {
      *            the extension service
      */
     public BpmnToken(@Nonnull Node startNode,
+                     @Nullable ControlFlow lastTakenControlFlow,
                      @Nullable Token parentToken,
-                     AbstractProcessInstance instance,
-                     Navigator navigator,
+                     @Nonnull AbstractProcessInstance instance,
+                     @Nonnull Navigator navigator,
                      @Nullable ExtensionService extensionService) {
-
+        
         super(startNode, parentToken, instance, navigator, extensionService);
+        this.lastTakenControlFlow = lastTakenControlFlow;
         changeActivityState(ActivityState.INIT);
     }
 
@@ -203,11 +228,12 @@ public class BpmnToken extends AbstractToken {
      *            the new state
      */
     protected void changeActivityState(ActivityState newState) {
-
+        
         final ActivityState prevState = currentActivityState;
+        
         this.currentActivityState = newState;
         setChanged();
-
+        
         notifyObservers(new ActivityLifecycleChangeEvent(currentNode, prevState, newState, this));
     }
 
@@ -242,8 +268,7 @@ public class BpmnToken extends AbstractToken {
             
             for (ControlFlow controlFlow : controlFlowList) {
                 Node node = controlFlow.getDestination();
-                Token newToken = createToken(node);
-                newToken.setLastTakenControlFlow(controlFlow);
+                Token newToken = createToken(node, controlFlow);
                 tokensToNavigate.add(newToken);
             }
             

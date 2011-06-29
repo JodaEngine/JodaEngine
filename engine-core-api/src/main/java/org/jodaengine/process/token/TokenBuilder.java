@@ -5,6 +5,7 @@ import javax.annotation.Nullable;
 
 import org.jodaengine.navigator.Navigator;
 import org.jodaengine.process.instance.AbstractProcessInstance;
+import org.jodaengine.process.structure.ControlFlow;
 import org.jodaengine.process.structure.Node;
 
 /**
@@ -18,10 +19,13 @@ public interface TokenBuilder {
      * Creates the {@link Token}.
      *
      * @param startNode the starting node
+     * @param lastTakenControlFlow the last taken control flow
      * @param parentToken the parent token
      * @return the token
      */
-    Token create(@Nonnull Node startNode, @Nullable Token parentToken);
+    Token create(@Nonnull Node startNode,
+                 @Nullable ControlFlow lastTakenControlFlow,
+                 @Nullable Token parentToken);
     
     /**
      * Sets the nav.

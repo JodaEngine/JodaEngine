@@ -8,6 +8,7 @@ import javax.annotation.Nonnull;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.jodaengine.process.definition.ProcessDefinition;
+import org.jodaengine.process.structure.ControlFlow;
 import org.jodaengine.process.structure.Node;
 import org.jodaengine.process.token.Token;
 import org.jodaengine.process.token.TokenBuilder;
@@ -134,13 +135,14 @@ public class ProcessInstance extends AbstractProcessInstance {
 
     @Override
     public Token createToken(Node startNode) {
-        return createToken(startNode, null);
+        return createToken(startNode, null, null);
     }
     
     @Override
     public Token createToken(Node startNode,
+                             ControlFlow lastTakenControlFlow,
                              Token parentToken) {
-        Token token = builder.create(startNode, parentToken);
+        Token token = builder.create(startNode, lastTakenControlFlow, parentToken);
         assignedTokens.add(token);
         return token;
     }

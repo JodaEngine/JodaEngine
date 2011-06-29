@@ -254,7 +254,7 @@ function _generateInterruptedInstanceHTML(interruptedInstance) {
                + '<a href="#" class="show-full-svg-artifact">'
                    + '<div rel="#svg-artifact-full-overlay">Open as SVG</div>'
                + '</a>';
-
+    
     return result;
 }
 

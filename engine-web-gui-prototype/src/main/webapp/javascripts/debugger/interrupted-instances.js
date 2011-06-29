@@ -87,7 +87,7 @@ $().ready(function() {
         });
         
         if ($(document).overlay) {
-            $('a.show-full-svg-artifact *[rel]', tableBody).overlay();
+            $('a.show-full-svg-artifact *[rel]', tableBody).overlay({speed: 0});
         }
         
         $('.controls-cell a.control-instance', tableBody).click(function(event) {
@@ -138,6 +138,7 @@ $().ready(function() {
         var currentNode = interruptedInstance.interruptedToken.currentNode;
         
         highlightCurrentNode(interruptedInstanceId, currentNode, frame);
+        highlightExecutedPath(interruptedInstanceId, interruptedInstance, frame);
     });
 });
 
@@ -177,4 +178,41 @@ function highlightCurrentNode(interruptedInstanceId, currentNode, frame) {
     svgFrameElement.attr('fill', 'orange');
     svgFrameElement.attr('is-halted', 'true');
     svgFrameElement.attr('interrupted-instance-id', interruptedInstanceId);
+};
+
+/**
+ * Highlights the executed path.
+ * 
+ * @param interruptedInstanceId the interrupted instance's id
+ * @param interruptedInstance the instance data
+ * @param frame the frame with the svg overlay
+ */
+function highlightExecutedPath(interruptedInstanceId, interruptedInstance, frame) {
+    
+    var attribute = interruptedInstance.interruptedToken.attributes['extension-debugger-attribute'];
+    
+    $(attribute.fullPath).each(function(index, entry) {
+        
+        var color = 'orange';
+        
+        var flowFrame = $('g[id="svg-' + entry.path.id + '"]', frame);
+        var pathFrame = $('path', flowFrame);
+        
+        //
+        // color the path
+        //
+        pathFrame.attr('stroke', color);
+        
+        //
+        // color the pointer
+        //
+        var markerEnd = pathFrame.attr('marker-end').replace('url(#', '').replace(')', '');
+        var markerStart = pathFrame.attr('marker-start').replace('url(#', '').replace(')', '');
+        var markerEndFrame = $('marker[id="' + markerEnd + '"] path');
+        var markerStartFrame = $('marker[id="' + markerStart + '"] path');
+        markerEndFrame.attr('stroke', color);
+        markerEndFrame.attr('fill', color);
+        markerStartFrame.attr('stroke', color);
+        markerStartFrame.attr('fill', color);
+    });
 };

@@ -5,6 +5,7 @@ import javax.annotation.Nullable;
 import org.jodaengine.ext.service.ExtensionService;
 import org.jodaengine.navigator.Navigator;
 import org.jodaengine.process.instance.AbstractProcessInstance;
+import org.jodaengine.process.structure.ControlFlow;
 import org.jodaengine.process.structure.Node;
 import org.jodaengine.process.token.BpmnToken;
 import org.jodaengine.process.token.Token;
@@ -78,8 +79,15 @@ public class BpmnTokenBuilder implements TokenBuilder {
     
     @Override
     public Token create(Node node,
+                        ControlFlow lastTakenControlFlow,
                         Token parentToken) {
-        return new BpmnToken(node, parentToken, instance, nav, this.extensionService);
+        return new BpmnToken(
+            node,
+            lastTakenControlFlow,
+            parentToken,
+            instance,
+            nav,
+            this.extensionService);
     }
 
 }

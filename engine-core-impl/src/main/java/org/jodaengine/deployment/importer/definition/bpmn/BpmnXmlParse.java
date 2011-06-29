@@ -40,7 +40,6 @@ import org.jodaengine.process.structure.Condition;
 import org.jodaengine.process.structure.ControlFlow;
 import org.jodaengine.process.structure.ControlFlowBuilder;
 import org.jodaengine.process.structure.Node;
-import org.jodaengine.process.structure.condition.CheckVariableTrueCondition;
 import org.jodaengine.process.structure.condition.JuelExpressionCondition;
 import org.jodaengine.resource.AbstractParticipant;
 import org.jodaengine.resource.AbstractRole;
@@ -678,19 +677,18 @@ public class BpmnXmlParse extends XmlParse {
      *            - The 'process' element wherein the sequence flow are defined.
      */
     protected void parseSequenceFlow(XmlElement processElement) {
-
+        
         for (XmlElement sequenceFlowElement : processElement.getElements("sequenceFlow")) {
-
-            @SuppressWarnings("unused")
+            
             String id = sequenceFlowElement.getAttribute("id");
             String sourceRef = sequenceFlowElement.getAttribute("sourceRef");
             String destinationRef = sequenceFlowElement.getAttribute("targetRef");
-
+            
             if (sourceRef == null && destinationRef == null) {
                 String errorMessage = "Each SequenceFlow XML tag must have a sourceRef"
                     + " and a destinationRef corresponding to a XML activity."
                     + " One of these attributes are not set correctly. Please do that!!";
-
+                
                 getProblemLogger().addError(errorMessage, sequenceFlowElement);
                 return;
             }
@@ -711,15 +709,18 @@ public class BpmnXmlParse extends XmlParse {
             }
 
             Condition controlFlowCondition = parseSequenceFlowCondition(sequenceFlowElement);
-
+            
             ControlFlowBuilder controlFlowBuilder = processBuilder.getControlFlowBuilder().controlFlowGoesFromTo(
                 sourceNode, destinationNode);
+            
+            controlFlowBuilder.setId(id);
+            
             if (controlFlowCondition != null) {
                 controlFlowBuilder.setCondition(controlFlowCondition);
             }
-
+            
             ControlFlow controlFlow = controlFlowBuilder.buildControlFlow();
-
+            
             for (BpmnXmlParseListener parseListener : parseListeners) {
                 parseListener.parseSequenceFlow(sequenceFlowElement, controlFlow, processBuilder);
             }

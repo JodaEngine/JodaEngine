@@ -117,13 +117,13 @@ public class BpmnAndJoinTest {
         BpmnNodeFactory.createControlFlowFromTo(builder, node1, joinNode);
         BpmnNodeFactory.createControlFlowFromTo(builder, node2, joinNode);
         BpmnNodeFactory.createControlFlowFromTo(builder, joinNode, node3);
-
+        
         BpmnTokenBuilder tokenBuilder = new BpmnTokenBuilder(navigator, null);
-        AbstractToken token = new BpmnToken(splitNode, new ProcessInstance(null, tokenBuilder), navigator);
-
+        AbstractToken token = new BpmnToken(splitNode, new ProcessInstance(null, tokenBuilder), navigator, null);
+        
         List<Token> newTokens = new ArrayList<Token>();
-        newTokens.add(token.createToken(node1));
-        newTokens.add(token.createToken(node2));
+        newTokens.add(token.createToken(node1, null));
+        newTokens.add(token.createToken(node2, null));
         return newTokens;
     }
     /**
