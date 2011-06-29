@@ -82,7 +82,8 @@ public abstract class AbstractCorrelatingEventAdapter
 
             if (processEvent.evaluate(e)) {
 
-                correlateProcessEvent(processEvent);
+                // TODO @Eventteam: you still got some stuff to do around here, you know...
+                trigger(processEvent);
             }
         }
 
@@ -97,7 +98,7 @@ public abstract class AbstractCorrelatingEventAdapter
      * @param processEvent
      *            - the {@link IncomingProcessEvent} that was correlated successfully
      */
-    private void correlateProcessEvent(IncomingProcessEvent processEvent) {
+    private void trigger(IncomingProcessEvent processEvent) {
 
         processEvent.trigger();
 
