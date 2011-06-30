@@ -22,7 +22,7 @@ public class PlaceSplitBehaviour implements OutgoingBehaviour {
     public Collection<Token> split(Collection<Token> tokens)
     throws NoValidPathException {
         
-        // We only work if one token, due to petri net semantic
+        // We start with one token, which lies on the place
         Token token = tokens.iterator().next();
         
         // The activated transitions we can reach from this place
@@ -36,8 +36,9 @@ public class PlaceSplitBehaviour implements OutgoingBehaviour {
         // Now check for reachable transitions
         for (ControlFlow t : currentNode.getOutgoingControlFlows()) {
             
-            //save all possible Transitions
+            // Save all possible Transitions
             nextPetriTranisiton = t.getDestination();
+            // Is the Transition activated?
             boolean joinPossible = nextPetriTranisiton.getIncomingBehaviour().joinable(token, nextPetriTranisiton);
             
             if (joinPossible) {
@@ -56,7 +57,7 @@ public class PlaceSplitBehaviour implements OutgoingBehaviour {
         
         List<ControlFlow> chosenControlFlowList = new ArrayList<ControlFlow>();
         
-        // Now move the token to the next node and return it 
+        // Now move the token to the Transition and return the list of token
         chosenControlFlowList.add(possibleControlFlowsToTake.get(randomNumber));
         transitionsToNavigate = token.navigateTo(chosenControlFlowList);
         
