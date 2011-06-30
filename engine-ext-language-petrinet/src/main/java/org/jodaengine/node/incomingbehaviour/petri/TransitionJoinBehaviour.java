@@ -17,7 +17,7 @@ import org.jodaengine.process.token.TokenUtil;
 public class TransitionJoinBehaviour implements IncomingBehaviour {
 
     @Override
-    // Just for info: The join is not directly needed, but the call of the method consumeTokens is important.
+    // The join is not directly needed, but the call of the method consumeTokens is important.
     public List<Token> join(Token token) {
         consumeTokens(token);
         List<Token> tokens = new ArrayList<Token>();
@@ -30,11 +30,10 @@ public class TransitionJoinBehaviour implements IncomingBehaviour {
     public boolean joinable(Token token, Node node) {
         TokenUtil util = new TokenUtil();
         
-        // Attention: the node is not the current node of the token, it is a reachable node from the current node.
-        // In this case, it is the node of the current behaviour.
+        // Attention: the node is not the current node of the token, it is a reachable Transition from the current Place of the token.
         // The behaviour itself does not know the node which it is belonging to.
         
-        // Now check each place before the petri transition, if there are enough tokens.
+        // Now check each place before the petri transition if there are enough tokens.
         for (ControlFlow t : node.getIncomingControlFlows()) {
             if (util.getTokensWhichAreOnNode(t.getSource(), token.getInstance()).size() == 0) {
                 return false;
@@ -57,7 +56,7 @@ public class TransitionJoinBehaviour implements IncomingBehaviour {
         
         for (ControlFlow t : controlFlows) {
             Node placeBeforePetriTransition = t.getSource();
-            // get Tokens, which are still there
+            // Get Token, which are still there
             oldTokensOnPlace = util.getTokensWhichAreOnNode(placeBeforePetriTransition, instance);
             
             // One token of the place should be deleted.
@@ -66,8 +65,7 @@ public class TransitionJoinBehaviour implements IncomingBehaviour {
                 //oldTokens.get(0).setCurrentNode(nextPetriTranisiton);
                 Token oldToken = oldTokensOnPlace.get(0);
                 instance.removeToken(oldToken);
-                // Remove the consumed tokens from the navigator.
-                //TODO: -.- from instance>tokenBuilder>Nav ...
+                // Remove the consumed token from the navigator.
                 token.getNavigator().removeTokenFromScheduler(oldToken);
             }
             
