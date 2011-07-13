@@ -11,6 +11,7 @@ import org.jodaengine.deployment.DeploymentBuilder;
 import org.jodaengine.exception.DefinitionNotActivatedException;
 import org.jodaengine.exception.DefinitionNotFoundException;
 import org.jodaengine.exception.IllegalStarteventException;
+import org.jodaengine.exception.UnsupportedDefinitionException;
 import org.jodaengine.node.factory.PetriNetTransitionFactory;
 import org.jodaengine.node.factory.petri.PetriNetNodeFactory;
 import org.jodaengine.process.definition.ProcessDefinition;
@@ -66,9 +67,10 @@ public class CompletePetriNetTest extends AbstractJodaEngineTest{
      * @throws DefinitionNotFoundException the definition not found exception
      * @throws InterruptedException the interrupted exception
      * @throws DefinitionNotActivatedException 
+     * @throws UnsupportedDefinitionException 
      */
     @Test
-    public void testTheProcessExecution() throws DefinitionNotFoundException, InterruptedException, DefinitionNotActivatedException {
+    public void testTheProcessExecution() throws DefinitionNotFoundException, InterruptedException, DefinitionNotActivatedException, UnsupportedDefinitionException {
         
         AbstractProcessInstance processInstance = jodaEngineServices.getNavigatorService().startProcessInstance(
             sampleProcessUUID);
@@ -87,9 +89,10 @@ public class CompletePetriNetTest extends AbstractJodaEngineTest{
      * @throws DefinitionNotFoundException the definition not found exception
      * @throws InterruptedException the interrupted exception
      * @throws DefinitionNotActivatedException 
+     * @throws UnsupportedDefinitionException 
      */
     @Test
-    public void testTheProcessExecutionOfTwo() throws DefinitionNotFoundException, InterruptedException, DefinitionNotActivatedException {
+    public void testTheProcessExecutionOfTwo() throws DefinitionNotFoundException, InterruptedException, DefinitionNotActivatedException, UnsupportedDefinitionException {
         int counter = 0;
         
         AbstractProcessInstance processInstance = jodaEngineServices.getNavigatorService().startProcessInstance(
