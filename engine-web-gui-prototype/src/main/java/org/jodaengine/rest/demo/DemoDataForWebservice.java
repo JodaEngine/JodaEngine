@@ -11,6 +11,7 @@ import org.jodaengine.exception.DefinitionNotFoundException;
 import org.jodaengine.exception.IllegalStarteventException;
 import org.jodaengine.exception.ProcessArtifactNotFoundException;
 import org.jodaengine.exception.ResourceNotAvailableException;
+import org.jodaengine.exception.UnsupportedDefinitionException;
 import org.jodaengine.node.factory.ControlFlowFactory;
 import org.jodaengine.node.factory.bpmn.BpmnNodeFactory;
 import org.jodaengine.node.factory.bpmn.BpmnProcessDefinitionModifier;
@@ -97,6 +98,9 @@ public final class DemoDataForWebservice {
             } catch (DefinitionNotActivatedException e) {
                 
                 logger.error("An Exception occurred: " + e.getMessage(), e);
+            } catch (UnsupportedDefinitionException e) {
+                
+                logger.error("An Exception occurred: " + e.getMessage(), e);
             }
         }
     }
@@ -131,10 +135,11 @@ public final class DemoDataForWebservice {
      * @throws ProcessArtifactNotFoundException
      * @throws DefinitionNotFoundException
      * @throws DefinitionNotActivatedException
+     * @throws UnsupportedDefinitionException 
      */
     private static void generateDemoWorklistItems()
     throws IllegalStarteventException, ProcessArtifactNotFoundException, DefinitionNotFoundException,
-    DefinitionNotActivatedException {
+    DefinitionNotActivatedException, UnsupportedDefinitionException {
 
         BpmnProcessDefinitionBuilder processBuilder = BpmnProcessDefinitionBuilder.newBuilder();
 

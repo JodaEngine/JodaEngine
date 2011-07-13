@@ -13,6 +13,7 @@ import org.jodaengine.JodaEngineServices;
 import org.jodaengine.eventmanagement.processevent.incoming.IncomingStartProcessEvent;
 import org.jodaengine.exception.DefinitionNotActivatedException;
 import org.jodaengine.exception.DefinitionNotFoundException;
+import org.jodaengine.exception.UnsupportedDefinitionException;
 import org.jodaengine.navigator.Navigator;
 import org.jodaengine.navigator.NavigatorStatistic;
 import org.jodaengine.navigator.schedule.Scheduler;
@@ -56,7 +57,7 @@ public class NavigatorWebService implements Navigator {
 
     @Override
     public AbstractProcessInstance startProcessInstance(ProcessDefinitionID definitionId)
-    throws DefinitionNotFoundException, DefinitionNotActivatedException, DefinitionNotActivatedException {
+    throws DefinitionNotFoundException, DefinitionNotActivatedException, DefinitionNotActivatedException, UnsupportedDefinitionException {
 
         return navigatorService.startProcessInstance(definitionId);
     }
@@ -72,11 +73,12 @@ public class NavigatorWebService implements Navigator {
      * @throws DefinitionNotFoundException
      *             thrown if the process definition is not found
      * @return returns the created instance
+     * @throws UnsupportedDefinitionException 
      */
     @Path("/process-definitions/{definitionId}/start")
     @POST
     public AbstractProcessInstance startProcessInstance(@PathParam("definitionId") String definitionID)
-    throws DefinitionNotFoundException, DefinitionNotActivatedException {
+    throws DefinitionNotFoundException, DefinitionNotActivatedException, UnsupportedDefinitionException {
 
         return startProcessInstance(ProcessDefinitionID.fromString(definitionID));
     }

@@ -2,6 +2,7 @@ package org.jodaengine.process.instantiation;
 
 import org.jodaengine.eventmanagement.processevent.incoming.IncomingStartProcessEvent;
 import org.jodaengine.process.definition.ProcessDefinitionInside;
+import org.jodaengine.process.structure.Node;
 import org.jodaengine.util.ServiceContext;
 
 
@@ -24,4 +25,12 @@ public interface InstantiationPatternContext extends ServiceContext {
      * @return the thrown {@link IncomingStartProcessEvent}
      */
     IncomingStartProcessEvent getThrownStartEvent();
+    
+    /**
+     * In case an {@link Node startNode} has been specified, this method returns it.
+     * Otherwise returns null.
+     * 
+     * @return the thrown {@link IncomingStartProcessEvent}
+     */
+    Node getSpecifiedStartNode();
 }

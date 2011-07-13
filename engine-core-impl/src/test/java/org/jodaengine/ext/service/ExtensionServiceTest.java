@@ -13,6 +13,7 @@ import org.jodaengine.deployment.importer.definition.bpmn.BpmnXmlParseListener;
 import org.jodaengine.exception.DefinitionNotActivatedException;
 import org.jodaengine.exception.DefinitionNotFoundException;
 import org.jodaengine.exception.IllegalStarteventException;
+import org.jodaengine.exception.UnsupportedDefinitionException;
 import org.jodaengine.ext.AbstractListenable;
 import org.jodaengine.ext.listener.AbstractNavigatorListener;
 import org.jodaengine.ext.listener.AbstractSchedulerListener;
@@ -422,11 +423,12 @@ public class ExtensionServiceTest extends AbstractJodaEngineTest {
      * @throws ExtensionNotAvailableException test fails
      * @throws DefinitionNotFoundException test fails
      * @throws DefinitionNotActivatedException test fails
+     * @throws UnsupportedDefinitionException 
      */
     @Test
     public void testTokenListenerIntegrationInNavigatorForBpmnToken()
     throws IllegalStarteventException, ExtensionNotAvailableException,
-           DefinitionNotFoundException, DefinitionNotActivatedException {
+           DefinitionNotFoundException, DefinitionNotActivatedException, UnsupportedDefinitionException {
         
         //
         // get ExtensionService

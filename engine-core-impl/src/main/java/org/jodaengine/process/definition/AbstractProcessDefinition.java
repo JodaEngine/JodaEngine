@@ -9,6 +9,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.jodaengine.eventmanagement.EventSubscriptionManagement;
 import org.jodaengine.eventmanagement.processevent.incoming.IncomingStartProcessEvent;
 import org.jodaengine.exception.DefinitionNotActivatedException;
+import org.jodaengine.exception.UnsupportedDefinitionException;
 import org.jodaengine.navigator.NavigatorInside;
 import org.jodaengine.process.activation.ProcessDeActivationPattern;
 import org.jodaengine.process.activation.ProcessDefinitionActivationPatternContext;
@@ -116,7 +117,7 @@ public abstract class AbstractProcessDefinition implements ProcessDefinitionInsi
 
         return startNodes;
     }
-    
+
     @Override
     public boolean isActivated() {
 
@@ -156,9 +157,10 @@ public abstract class AbstractProcessDefinition implements ProcessDefinitionInsi
 
         getAttributes().put(attributeKey, attributeValue);
     }
-    
+
     @Override
-    public AbstractProcessInstance createProcessInstance(NavigatorInside navigator) throws DefinitionNotActivatedException {
+    public AbstractProcessInstance createProcessInstance(NavigatorInside navigator)
+    throws DefinitionNotActivatedException, UnsupportedDefinitionException {
 
         if (!activated) {
             String errorMessage = "The processdefintion (id: " + id + "; name: " + name
@@ -166,14 +168,22 @@ public abstract class AbstractProcessDefinition implements ProcessDefinitionInsi
             logger.error(errorMessage);
             throw new DefinitionNotActivatedException(getID());
         }
-        
-        InstantiationPatternContext patternContext = new InstantiationPatternContextImpl(this);
+
+        if (startNodes.size() != 1) {
+            String errorMessage = "The processdefintion (id: " + id + "; name: " + name + ") has " + startNodes.size()
+                + " blank start Nodes, which is currently not supported.";
+            logger.error(errorMessage);
+            throw new UnsupportedDefinitionException(errorMessage);
+        }
+
+        InstantiationPatternContext patternContext = new InstantiationPatternContextImpl(this, startNodes.get(0));
         return firstInstantiationPattern.createProcessInstance(patternContext);
     }
-    
+
     @Override
-    public AbstractProcessInstance createProcessInstance(NavigatorInside navigator, IncomingStartProcessEvent firedStartEvent) {
-    
+    public AbstractProcessInstance createProcessInstance(NavigatorInside navigator,
+                                                         IncomingStartProcessEvent firedStartEvent) {
+
         InstantiationPatternContext patternContext = new InstantiationPatternContextImpl(this, firedStartEvent);
         return firstInstantiationPattern.createProcessInstance(patternContext);
     }

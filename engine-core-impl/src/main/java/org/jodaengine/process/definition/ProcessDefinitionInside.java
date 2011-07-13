@@ -8,6 +8,7 @@ import org.jodaengine.eventmanagement.EventSubscriptionManagement;
 import org.jodaengine.eventmanagement.processevent.incoming.IncomingStartProcessEvent;
 import org.jodaengine.exception.DefinitionNotActivatedException;
 import org.jodaengine.exception.IllegalStarteventException;
+import org.jodaengine.exception.UnsupportedDefinitionException;
 import org.jodaengine.navigator.NavigatorInside;
 import org.jodaengine.process.instance.AbstractProcessInstance;
 import org.jodaengine.process.structure.Node;
@@ -43,15 +44,14 @@ public interface ProcessDefinitionInside extends ProcessDefinition {
 
     /**
      * Responsible for instantiating a process.
-     * 
-     * @param navigator
-     *            - the {@link NavigatorInside} creating and modifying tokens
+     *
+     * @param navigator - the {@link NavigatorInside} creating and modifying tokens
      * @return a {@link AbstractProcessInstance processInstance}
-     * @throws DefinitionNotActivatedException
-     *             the definition is not activated
+     * @throws DefinitionNotActivatedException the definition is not activated
+     * @throws UnsupportedDefinitionException the unsupported definition exception
      */
     AbstractProcessInstance createProcessInstance(NavigatorInside navigator)
-    throws DefinitionNotActivatedException;
+    throws DefinitionNotActivatedException, UnsupportedDefinitionException;
 
     /**
      * Responsible for instantiating a process.

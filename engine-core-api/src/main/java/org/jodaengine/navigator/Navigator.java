@@ -8,6 +8,7 @@ import org.jodaengine.bootstrap.Service;
 import org.jodaengine.eventmanagement.processevent.incoming.IncomingStartProcessEvent;
 import org.jodaengine.exception.DefinitionNotActivatedException;
 import org.jodaengine.exception.DefinitionNotFoundException;
+import org.jodaengine.exception.UnsupportedDefinitionException;
 import org.jodaengine.navigator.schedule.Scheduler;
 import org.jodaengine.process.definition.ProcessDefinition;
 import org.jodaengine.process.definition.ProcessDefinitionID;
@@ -39,18 +40,16 @@ public interface Navigator extends Service {
 
     /**
      * Start the process instance.
-     * 
-     * @param processID
-     *            the process id
+     *
+     * @param processID the process id
      * @return the started instance
-     * @throws DefinitionNotFoundException
-     *             the process definition was not found
-     * @throws DefinitionNotActivatedException
-     *             the definition is not activated
+     * @throws DefinitionNotFoundException the process definition was not found
+     * @throws DefinitionNotActivatedException the definition is not activated
+     * @throws UnsupportedDefinitionException the unsupported definition exception
      */
     @Nonnull
     AbstractProcessInstance startProcessInstance(@Nonnull ProcessDefinitionID processID)
-    throws DefinitionNotFoundException, DefinitionNotActivatedException;
+    throws DefinitionNotFoundException, DefinitionNotActivatedException, UnsupportedDefinitionException;
 
     /**
      * Add another thread that works on the to-be-executed instances.

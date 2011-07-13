@@ -6,6 +6,7 @@ import org.jodaengine.deployment.DeploymentBuilder;
 import org.jodaengine.exception.DefinitionNotActivatedException;
 import org.jodaengine.exception.DefinitionNotFoundException;
 import org.jodaengine.exception.IllegalStarteventException;
+import org.jodaengine.exception.UnsupportedDefinitionException;
 import org.jodaengine.monitor.Monitor;
 import org.jodaengine.monitor.MonitorGUI;
 import org.jodaengine.navigator.NavigatorImpl;
@@ -55,9 +56,10 @@ public final class SimpleExampleProcess {
      *             fails
      * @throws DefinitionNotFoundException
      *             fails
+     * @throws UnsupportedDefinitionException 
      */
     public static void main(String[] args)
-    throws IllegalStarteventException, DefinitionNotFoundException, DefinitionNotActivatedException {
+    throws IllegalStarteventException, DefinitionNotFoundException, DefinitionNotActivatedException, UnsupportedDefinitionException {
 
         MonitorGUI monitorGUI = MonitorGUI.start(INSTANCE_COUNT);
 

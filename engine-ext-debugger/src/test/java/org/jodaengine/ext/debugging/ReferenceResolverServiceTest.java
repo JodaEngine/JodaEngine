@@ -10,6 +10,7 @@ import java.util.UUID;
 import org.jodaengine.RepositoryService;
 import org.jodaengine.exception.DefinitionNotActivatedException;
 import org.jodaengine.exception.DefinitionNotFoundException;
+import org.jodaengine.exception.UnsupportedDefinitionException;
 import org.jodaengine.ext.debugging.api.Breakpoint;
 import org.jodaengine.ext.debugging.api.InterruptedInstance;
 import org.jodaengine.ext.debugging.api.NodeBreakpoint;
@@ -300,9 +301,10 @@ public class ReferenceResolverServiceTest extends AbstractJodaEngineTest {
      * 
      * @throws DefinitionNotFoundException test fails
      * @throws DefinitionNotActivatedException 
+     * @throws UnsupportedDefinitionException 
      */
     @Test
-    public void testInstanceResolution() throws DefinitionNotFoundException, DefinitionNotActivatedException {
+    public void testInstanceResolution() throws DefinitionNotFoundException, DefinitionNotActivatedException, UnsupportedDefinitionException {
         
         //
         // deploy process definition and start an instance

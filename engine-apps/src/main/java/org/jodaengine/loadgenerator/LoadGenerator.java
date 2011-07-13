@@ -11,6 +11,7 @@ import org.jodaengine.exception.DefinitionNotActivatedException;
 import org.jodaengine.exception.DefinitionNotFoundException;
 import org.jodaengine.exception.IllegalStarteventException;
 import org.jodaengine.exception.ResourceNotAvailableException;
+import org.jodaengine.exception.UnsupportedDefinitionException;
 import org.jodaengine.factories.process.ProcessDeployer;
 import org.jodaengine.navigator.NavigatorImpl;
 import org.jodaengine.process.definition.ProcessDefinitionID;
@@ -203,9 +204,11 @@ public class LoadGenerator {
             try {
                 navigator.startProcessInstance(definitionId);
             } catch (DefinitionNotFoundException e) {
-                logger.error("Exception not found when starting up our many many instances in the Loadgenerator", e);
+                logger.error("Definition not found when starting up our many many instances in the Loadgenerator", e);
             } catch (DefinitionNotActivatedException e) {
-                logger.error("Exception not found when starting up our many many instances in the Loadgenerator", e);
+                logger.error("Definition is not activated", e);
+            } catch (UnsupportedDefinitionException e) {
+                logger.error("Definition is not supported", e);
             }
         }
 

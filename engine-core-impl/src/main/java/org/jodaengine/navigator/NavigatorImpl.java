@@ -14,6 +14,7 @@ import org.jodaengine.bootstrap.Service;
 import org.jodaengine.eventmanagement.processevent.incoming.IncomingStartProcessEvent;
 import org.jodaengine.exception.DefinitionNotActivatedException;
 import org.jodaengine.exception.DefinitionNotFoundException;
+import org.jodaengine.exception.UnsupportedDefinitionException;
 import org.jodaengine.ext.AbstractListenable;
 import org.jodaengine.ext.listener.AbstractNavigatorListener;
 import org.jodaengine.ext.listener.AbstractSchedulerListener;
@@ -152,7 +153,7 @@ Service {
 
     @Override
     public AbstractProcessInstance startProcessInstance(ProcessDefinitionID processID)
-    throws DefinitionNotFoundException, DefinitionNotActivatedException {
+    throws DefinitionNotFoundException, DefinitionNotActivatedException, UnsupportedDefinitionException {
 
         // TODO use the variable repository here. This cannot be used in tests, as it requires the bootstrap to have
         // run first, but we definitely do not want to start the whole engine to test a simple feature.

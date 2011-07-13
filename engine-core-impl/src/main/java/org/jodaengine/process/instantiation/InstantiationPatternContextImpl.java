@@ -5,6 +5,7 @@ import javax.annotation.Nonnull;
 import org.jodaengine.eventmanagement.processevent.incoming.IncomingStartProcessEvent;
 import org.jodaengine.exception.JodaEngineRuntimeException;
 import org.jodaengine.process.definition.ProcessDefinitionInside;
+import org.jodaengine.process.structure.Node;
 import org.jodaengine.util.ServiceContextImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ public class InstantiationPatternContextImpl extends ServiceContextImpl implemen
 
     private IncomingStartProcessEvent startEvent;
     private ProcessDefinitionInside processDefinition;
+    private Node startNode;
 
     /**
      * Default constructor.
@@ -47,6 +49,22 @@ public class InstantiationPatternContextImpl extends ServiceContextImpl implemen
 
         this(processDefinition);
         this.startEvent = startEvent;
+    }
+    
+    /**
+     * A constructor that lets you choose the start node to be used.
+     *
+     * @param processDefinition the process definition
+     * @param startNode the start node
+     */
+    public InstantiationPatternContextImpl(ProcessDefinitionInside processDefinition, Node startNode) {
+        this(processDefinition);
+        this.startNode = startNode;
+    }
+    
+    @Override
+    public Node getSpecifiedStartNode() {
+        return this.startNode;
     }
 
     @Override
