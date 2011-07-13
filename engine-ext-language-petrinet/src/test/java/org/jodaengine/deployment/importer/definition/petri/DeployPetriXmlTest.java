@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.jodaengine.exception.DefinitionNotActivatedException;
 import org.jodaengine.exception.DefinitionNotFoundException;
+import org.jodaengine.exception.UnsupportedDefinitionException;
 import org.jodaengine.process.definition.ProcessDefinition;
 import org.jodaengine.process.definition.ProcessDefinitionID;
 import org.jodaengine.process.instance.AbstractProcessInstance;
@@ -63,9 +64,10 @@ public class DeployPetriXmlTest extends AbstractPetriDeployerTest {
      *
      * @throws DefinitionNotFoundException the definition not found exception
      * @throws InterruptedException the interrupted exception
+     * @throws UnsupportedDefinitionException 
      */
     @Test
-    public void testDeployAndExecution() throws DefinitionNotFoundException, InterruptedException, DefinitionNotActivatedException {
+    public void testDeployAndExecution() throws DefinitionNotFoundException, InterruptedException, DefinitionNotActivatedException, UnsupportedDefinitionException {
         ProcessDefinition processDefinition = super.testCorrectProcessParsingOfXml();
 
         ProcessDefinitionID id = processDefinition.getID();
